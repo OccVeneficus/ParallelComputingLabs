@@ -9,7 +9,7 @@ namespace Lab1;
 
 public static class MyMantrixManager
 {
-    private static MyMatrix GetContrastColors(MyMatrix picture, Color sub)
+    public static MyMatrix GetContrastColors(MyMatrix picture, Color sub)
     {
         for (var i = 0; i < picture.Width; i++)
         {
