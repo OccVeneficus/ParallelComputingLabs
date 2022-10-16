@@ -15,8 +15,8 @@ using MathNet.Numerics.LinearAlgebra.Double;
 public class MainVM : ObservableObject
 {
     private long _elapsedMs;
-    private string _firstImageName = "Resources\\image1_128.jpg";
-    private string _firstImageSmallName = "Resources\\image1_512.jpg";
+    private string _firstImageName = "Resources\\image1_512.jpg";
+    private string _firstImageSmallName = "Resources\\image1_128.jpg";
     private string CurrentDir => Directory.GetCurrentDirectory();
 
     public IRelayCommand CalculateCommand { get; set; }
@@ -30,10 +30,18 @@ public class MainVM : ObservableObject
     public MainVM()
     {
         CalculateCommand = new AsyncRelayCommand(CalculateAsync);
-        var a = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_firstImageName}"));
-        var b = a.GetSubMatrix(a.Width / 2, a.Width/2, 0, a.Height / 2);
-        ImageService.SaveImage(b.Values, $@"{CurrentDir}\Resources\testsave.jpeg");
+        var M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_firstImageName}"));
+        var M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_firstImageSmallName}"));
+        var list = M1.GetSubMatrices(M1.Width / 4);
 
+        //int id = 0;
+        //foreach (var myMatrix in list)
+        //{
+        //    ImageService.SaveImage(myMatrix.Values, @$"{CurrentDir}\Resources\part{id}.jpeg");
+        //    id++;
+        //}
+        var a = new MyMatrix(list, 4, 4);
+        ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
     private async Task CalculateAsync()
