@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,6 +13,7 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 public class MainVM : ObservableObject
 {
+    private long _elapsedMs;
     public int D1 { get; set; }
 
     public int S1 { get; set; }
@@ -22,6 +25,12 @@ public class MainVM : ObservableObject
     public int G { get; set; }
 
     public IRelayCommand CalculateCommand { get; set; }
+
+    public long ElapsedMs
+    {
+        get => _elapsedMs;
+        set => SetProperty(ref _elapsedMs, value);
+    }
 
     public MainVM()
     {
@@ -55,7 +64,16 @@ public class MainVM : ObservableObject
             }
         }
 
-        var r = await CalculateMatrix(subMatrices[0], M2[0, 0]);
+        Stopwatch stopwatch = new Stopwatch();
+        Matrix<double> result = Matrix<double>.Build.Dense(m1RowCount, m1ColumnCount);
+        stopwatch.Start();
+        for (var i = 0; i < subMatrixRowCount / 2; i++)
+        {
+            var resultSubMatrix = await CalculateMatrix(subMatrices[i], M2[i, 0]);
+        }
+        stopwatch.Stop();
+
+        ElapsedMs = stopwatch.ElapsedMilliseconds;
     }
 
     private Matrix<double> CreateMatrix(int rowCount, int columnCount)
@@ -66,7 +84,28 @@ public class MainVM : ObservableObject
     }
 
     private async Task<Matrix<double>> CalculateMatrix(Matrix<double> matrix, double divider)
-    {
-        return await Task.Run(() => matrix - divider);
+    { 
+        return await Task.Run(() =>
+        {
+            var enumerateIndexed = matrix.EnumerateIndexed();
+            foreach (var valueTuple in enumerateIndexed)
+            {
+                var result = valueTuple.Item3 - divider;
+
+                if (result < 0)
+                {
+                    result = 0;
+                }
+
+                if (result > 255)
+                {
+                    result = 255;
+                }
+
+                matrix[valueTuple.Item1, valueTuple.Item2] = result;
+            }
+
+            return matrix;
+        });
     }
 }
