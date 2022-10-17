@@ -7,22 +7,33 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ElapsedMs}"></TextBlock>
-        <Button 
-            Grid.Row="1" 
-            Grid.Column="1" 
-            Content="Calculate" 
-            FontSize="40" 
-            Command="{Binding CalculateCommand}"/>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Width="100" Height="40" Content="One" Command="{Binding CalculateOne}"/>
+            <Button Grid.Row="1" Width="100" Height="40" Content="Two" Command="{Binding CalculateTwo}"/>
+            <Button Grid.Row="2" Width="100" Height="40" Content="Four" Command="{Binding CalculateFour}"/>
+            <Button Grid.Row="3" Width="100" Height="40" Content="Sixteen" Command="{Binding CalculateSixteen}"/>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{Binding OneTimeSpan}"/>
+            <TextBlock Grid.Row="1" Text="{Binding TwoTimeSpan}"/>
+            <TextBlock Grid.Row="2" Text="{Binding FourTimeSpan}"/>
+            <TextBlock Grid.Row="3" Text="{Binding SixteenTimeSpan}"/>
+        </Grid>
     </Grid>
 </Window>
