@@ -15,7 +15,6 @@ using System.Windows.Documents;
 
 public class MainVM : ObservableObject
 {
-    private long _elapsedMs;
     private long _oneTimeSpan;
     private long _twoTimeSpan;
     private long _fourTimeSpan;
@@ -29,19 +28,13 @@ public class MainVM : ObservableObject
     private string _secondImageSmall = "Resources\\image2_1024.jpg";
     private string CurrentDir => Directory.GetCurrentDirectory();
 
-    public IRelayCommand CalculateOne { get; set; }
+    public IAsyncRelayCommand CalculateOne { get; set; }
 
-    public IRelayCommand CalculateTwo { get; set; }
+    public IAsyncRelayCommand CalculateTwo { get; set; }
 
-    public IRelayCommand CalculateFour { get; set; }
+    public IAsyncRelayCommand CalculateFour { get; set; }
 
-    public IRelayCommand CalculateSixteen { get; set; }
-
-    public long ElapsedMs
-    {
-        get => _elapsedMs;
-        set => SetProperty(ref _elapsedMs, value);
-    }
+    public IAsyncRelayCommand CalculateSixteen { get; set; }
 
     public long OneTimeSpan
     {
@@ -67,15 +60,21 @@ public class MainVM : ObservableObject
         set => SetProperty(ref _sixteenTimeSpan, value);
     }
 
+    private MyMatrix M1 { get; }
+
+    private MyMatrix M2 { get; }
+
     public MainVM()
     {
+        M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
+        M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
         CalculateOne = new AsyncRelayCommand(CalculateOneInternal);
         CalculateTwo = new AsyncRelayCommand(CalculateTwoInternal);
         CalculateFour = new AsyncRelayCommand(CalculateFourInternal);
         CalculateSixteen = new AsyncRelayCommand(CalculateSixteenInternal);
     }
 
-    private async Task CalculateInOneThread(MyMatrix M1, MyMatrix M2)
+    private async Task CalculateInOneThread()
     {
         var elementCount = M1.Height / M2.Height;
         var list = M1.GetSubMatrices(elementCount);
@@ -91,7 +90,7 @@ public class MainVM : ObservableObject
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
-    private async Task CalculateInTwoThreads(MyMatrix M1, MyMatrix M2)
+    private async Task CalculateInTwoThreads()
     {
         var elementCount = M1.Height / M2.Height;
         var list = M1.GetSubMatrices(elementCount);
@@ -113,38 +112,26 @@ public class MainVM : ObservableObject
 
     private async Task CalculateOneInternal()
     {
-        var M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
-        var M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
-
-        await CalculateInOneThread(M1, M2);
+        await CalculateInOneThread();
     }
 
 
     private async Task CalculateTwoInternal()
     {
-        var M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
-        var M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
-
-        await CalculateInTwoThreads(M1, M2);
+        await CalculateInTwoThreads();
     }
 
     private async Task CalculateFourInternal()
     {
-        var M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
-        var M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
-
-        await CalculateInFourThreads(M1, M2);
+        await CalculateInFourThreads();
     }
 
     private async Task CalculateSixteenInternal()
     {
-        var M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
-        var M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
-
-        await CalculateInSixteenThreads(M1, M2);
+        await CalculateInSixteenThreads();
     }
 
-    private async Task CalculateInFourThreads(MyMatrix M1, MyMatrix M2)
+    private async Task CalculateInFourThreads()
     {
         var elementCount = M1.Height / M2.Height;
         var list = M1.GetSubMatrices(elementCount);
@@ -174,7 +161,7 @@ public class MainVM : ObservableObject
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
-    private async Task CalculateInSixteenThreads(MyMatrix M1, MyMatrix M2)
+    private async Task CalculateInSixteenThreads()
     {
         var elementCount = M1.Height / M2.Height;
         var list = M1.GetSubMatrices(elementCount);
