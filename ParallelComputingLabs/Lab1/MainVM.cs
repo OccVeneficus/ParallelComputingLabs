@@ -83,10 +83,11 @@ public class MainVM : ObservableObject
         var firstEndIndex = list.Count;
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        var part1 = await Calculate(firstStartIndex, firstEndIndex, list, subList);
+        var part1 = Calculate(firstStartIndex, firstEndIndex, list, subList);
+        var b = await Task.WhenAll(part1);
         stopwatch.Stop();
         OneTimeSpan = stopwatch.ElapsedMilliseconds;
-        var a = new MyMatrix(part1, M2.Height, M2.Height);
+        var a = new MyMatrix(b[0], M2.Height, M2.Height);
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
@@ -101,12 +102,13 @@ public class MainVM : ObservableObject
         var secondEndIndex = list.Count;
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        var part1 = await Calculate(firstStartIndex, firstEndIndex, list, subList);
-        var part2 = await Calculate(secondStartIndex, secondEndIndex, list, subList);
+        var part1 = Calculate(firstStartIndex, firstEndIndex, list, subList);
+        var part2 = Calculate(secondStartIndex, secondEndIndex, list, subList);
+        var b = await Task.WhenAll(part1, part2);
         stopwatch.Stop();
         TwoTimeSpan = stopwatch.ElapsedMilliseconds;
-        part1.AddRange(part2);
-        var a = new MyMatrix(part1, M2.Height, M2.Height);
+        b[0].AddRange(b[1]);
+        var a = new MyMatrix(b[0], M2.Height, M2.Height);
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
@@ -148,16 +150,17 @@ public class MainVM : ObservableObject
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        var part1 = await Calculate(firstStartIndex, firstEndIndex, list, subList);
-        var part2 = await Calculate(secondStartIndex, secondEndIndex, list, subList);
-        var part3 = await Calculate(thirdStartIndex, thirdEndIndex, list, subList);
-        var part4 = await Calculate(fourthStartIndex, fourthEndIndex, list, subList);
+        var part1 = Calculate(firstStartIndex, firstEndIndex, list, subList);
+        var part2 = Calculate(secondStartIndex, secondEndIndex, list, subList);
+        var part3 = Calculate(thirdStartIndex, thirdEndIndex, list, subList);
+        var part4 = Calculate(fourthStartIndex, fourthEndIndex, list, subList);
+        var b = await Task.WhenAll(part1, part2, part3, part4);
         stopwatch.Stop();
         FourTimeSpan = stopwatch.ElapsedMilliseconds;
-        part1.AddRange(part2);
-        part1.AddRange(part3);
-        part1.AddRange(part4);
-        var a = new MyMatrix(part1, M2.Height, M2.Height);
+        b[0].AddRange(b[1]);
+        b[0].AddRange(b[2]);
+        b[0].AddRange(b[3]);
+        var a = new MyMatrix(b[0], M2.Height, M2.Height);
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
@@ -170,40 +173,42 @@ public class MainVM : ObservableObject
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        var part1 = await Calculate(inexes[0], inexes[1], list, subList);
-        var part2 = await Calculate(inexes[2], inexes[3], list, subList);
-        var part3 = await Calculate(inexes[4], inexes[5], list, subList);
-        var part4 = await Calculate(inexes[6], inexes[7], list, subList);
-        var part5 = await Calculate(inexes[8], inexes[9], list, subList);
-        var part6 = await Calculate(inexes[10], inexes[11], list, subList);
-        var part7 = await Calculate(inexes[12], inexes[13], list, subList);
-        var part8 = await Calculate(inexes[14], inexes[15], list, subList);
-        var part9 = await Calculate(inexes[16], inexes[17], list, subList);
-        var part10 = await Calculate(inexes[18], inexes[19], list, subList);
-        var part11 = await Calculate(inexes[20], inexes[21], list, subList);
-        var part12 = await Calculate(inexes[22], inexes[23], list, subList);
-        var part13 = await Calculate(inexes[24], inexes[25], list, subList);
-        var part14 = await Calculate(inexes[26], inexes[27], list, subList);
-        var part15 = await Calculate(inexes[28], inexes[29], list, subList);
-        var part16 = await Calculate(inexes[30], inexes[31], list, subList);
+        var part1 =  Calculate(inexes[0], inexes[1], list, subList);
+        var part2 =  Calculate(inexes[2], inexes[3], list, subList);
+        var part3 =  Calculate(inexes[4], inexes[5], list, subList);
+        var part4 =  Calculate(inexes[6], inexes[7], list, subList);
+        var part5 =  Calculate(inexes[8], inexes[9], list, subList);
+        var part6 =  Calculate(inexes[10], inexes[11], list, subList);
+        var part7 =  Calculate(inexes[12], inexes[13], list, subList);
+        var part8 =  Calculate(inexes[14], inexes[15], list, subList);
+        var part9 =  Calculate(inexes[16], inexes[17], list, subList);
+        var part10 = Calculate(inexes[18], inexes[19], list, subList);
+        var part11 = Calculate(inexes[20], inexes[21], list, subList);
+        var part12 = Calculate(inexes[22], inexes[23], list, subList);
+        var part13 = Calculate(inexes[24], inexes[25], list, subList);
+        var part14 = Calculate(inexes[26], inexes[27], list, subList);
+        var part15 = Calculate(inexes[28], inexes[29], list, subList);
+        var part16 = Calculate(inexes[30], inexes[31], list, subList);
+        var b = await Task.WhenAll(part1, part2, part3, part4, part5, part6,
+            part7, part8, part9, part10, part11, part12, part13, part14, part15, part16);
         stopwatch.Stop();
         SixteenTimeSpan = stopwatch.ElapsedMilliseconds;
-        part1.AddRange(part2);
-        part1.AddRange(part3);
-        part1.AddRange(part4);
-        part1.AddRange(part5);
-        part1.AddRange(part6);
-        part1.AddRange(part7);
-        part1.AddRange(part8);
-        part1.AddRange(part9);
-        part1.AddRange(part10);
-        part1.AddRange(part11);
-        part1.AddRange(part12);
-        part1.AddRange(part13);
-        part1.AddRange(part14);
-        part1.AddRange(part15);
-        part1.AddRange(part16);
-        var a = new MyMatrix(part1, M2.Height, M2.Height);
+        b[0].AddRange(b[1]);
+        b[0].AddRange(b[2]);
+        b[0].AddRange(b[3]);
+        b[0].AddRange(b[4]);
+        b[0].AddRange(b[5]);
+        b[0].AddRange(b[6]);
+        b[0].AddRange(b[7]);
+        b[0].AddRange(b[8]);
+        b[0].AddRange(b[9]);
+        b[0].AddRange(b[10]);
+        b[0].AddRange(b[11]);
+        b[0].AddRange(b[12]);
+        b[0].AddRange(b[13]);
+        b[0].AddRange(b[14]);
+        b[0].AddRange(b[15]);
+        var a = new MyMatrix(b[0], M2.Height, M2.Height);
         ImageService.SaveImage(a.Values, @$"{CurrentDir}\Resources\test.jpeg");
     }
 
