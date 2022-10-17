@@ -20,12 +20,14 @@ public class MainVM : ObservableObject
     private long _fourTimeSpan;
     private long _sixteenTimeSpan;
 
-    private string _firstImageName = "Resources\\image1_512.jpg";
-    private string _firstImageSmallName = "Resources\\image1_128.jpg";
-    private string _firstImageVerySmallName = "Resources\\image1_64.jpg";
-    private string _firstImageMediumName = "Resources\\image1_256.jpg";
-    private string _secondImageLarge = "Resources\\image2_4096.jpg";
-    private string _secondImageSmall = "Resources\\image2_1024.jpg";
+    private string _firstImageLarge = "Resources\\image2_4096.jpg";
+    private string _firstImageSmall = "Resources\\image2_1024.jpg";
+
+    private string _secondImageLarge = "Resources\\image3_8192.jpg";
+    private string _secondImageSmall = "Resources\\image3_512.jpg";
+
+    private string _thirdImageLarge = "Resources\\image4_4096.jpg";
+    private string _thirdImageSmall = "Resources\\image4_512.jpg";
     private string CurrentDir => Directory.GetCurrentDirectory();
 
     public IAsyncRelayCommand CalculateOne { get; set; }
@@ -66,8 +68,14 @@ public class MainVM : ObservableObject
 
     public MainVM()
     {
-        M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
-        M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
+        M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_firstImageLarge}"));
+        M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_firstImageSmall}"));
+
+        //M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageLarge}"));
+        //M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_secondImageSmall}"));
+
+        //M1 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_thirdImageLarge}"));
+        //M2 = new MyMatrix(ImageService.LoadBitmapAsMatrix(@$"{CurrentDir}\{_thirdImageSmall}"));
         CalculateOne = new AsyncRelayCommand(CalculateOneInternal);
         CalculateTwo = new AsyncRelayCommand(CalculateTwoInternal);
         CalculateFour = new AsyncRelayCommand(CalculateFourInternal);
